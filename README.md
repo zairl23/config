@@ -1,4 +1,4 @@
 Config
 =========
 
-A simple config wrapper like laravel'config base on viper.
+A simple config wrapper like laravel's config base on viper.
