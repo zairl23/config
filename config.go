@@ -12,12 +12,12 @@ type Config struct {
 	Name string
 }
 
-func Init(cfg string) error {
+func Init(cfg string, file_type error) error {
 	c := Config{
 		Name: cfg,
 	}
 
-	if err := c.initConfig(); err != nil {
+	if err := c.initConfig(file_type); err != nil {
 		return err
 	}
 
@@ -26,14 +26,17 @@ func Init(cfg string) error {
 	return nil
 }
 
-func (c *Config) initConfig() error {
+func (c *Config) initConfig(file_type) error {
 	if c.Name != "" {
 		viper.SetConfigFile(c.Name)
 	} else {
 		viper.AddConfigPath("conf")
 		viper.SetConfigName("config")
 	}
-	viper.SetConfigType("yaml")   
+	if (file_type == "") {
+		file_type = "yaml"
+	}
+	viper.SetConfigType(file_type)   
 	viper.AutomaticEnv()     
 	viper.SetEnvPrefix("APISERVER") 
 	replacer := strings.NewReplacer(".", "_")
