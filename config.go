@@ -58,3 +58,7 @@ func (c *Config) watchConfig() {
 func Get(key string) string {
 	return viper.GetString(key)
 }
+
+func GetJson(key string) interface{} {
+	return viper.GetStringMap(key)
+}
