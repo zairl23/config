@@ -12,7 +12,7 @@ type Config struct {
 	Name string
 }
 
-func Init(cfg string, file_type error) error {
+func Init(cfg string, file_type string) error {
 	c := Config{
 		Name: cfg,
 	}
@@ -26,7 +26,7 @@ func Init(cfg string, file_type error) error {
 	return nil
 }
 
-func (c *Config) initConfig(file_type) error {
+func (c *Config) initConfig(file_type string) error {
 	if c.Name != "" {
 		viper.SetConfigFile(c.Name)
 	} else {
