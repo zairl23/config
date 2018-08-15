@@ -62,3 +62,19 @@ func Get(key string) string {
 func GetJson(key string) interface{} {
 	return viper.GetStringMap(key)
 }
+
+func GetRaw(key string) interface{} {
+	return viper.Get(key)
+}
+
+func GetFloat(key string) float64 {
+	return viper.GetFloat64(key)
+}
+
+func GetBool(key string) bool {
+	return viper.GetBool(key)
+}
+
+func GetInt(key string) int {
+	return viper.GetInt(key)
+}
