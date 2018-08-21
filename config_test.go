@@ -1,6 +1,6 @@
 package config
 
-import(
+import (
 	"testing"
 )
 
@@ -10,7 +10,7 @@ func TestGet(t *testing.T) {
 		panic(err)
 	}
 
-	if Get("name") == "config" && Get("nokey") == ""  {
+	if Get("name") == "config" && Get("nokey") == "" {
 		t.Log("test get pass")
 		return
 	}

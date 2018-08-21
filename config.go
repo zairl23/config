@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
@@ -12,9 +13,18 @@ type Config struct {
 	Name string
 }
 
-func Init(cfg string, file_type string) error {
+func Init(cfg string) error {
 	c := Config{
 		Name: cfg,
+	}
+
+	var file_type string
+	file_ext := filepath.Ext(cfg)
+	if file_ext == "" {
+		file_type = "yaml"
+	} else {
+		re := strings.NewReplacer(".", "")
+		file_type = re.Replace(file_ext)
 	}
 
 	if err := c.initConfig(file_type); err != nil {
@@ -33,12 +43,12 @@ func (c *Config) initConfig(file_type string) error {
 		viper.AddConfigPath("conf")
 		viper.SetConfigName("config")
 	}
-	if (file_type == "") {
+	if file_type == "" {
 		file_type = "yaml"
 	}
-	viper.SetConfigType(file_type)   
-	viper.AutomaticEnv()     
-	viper.SetEnvPrefix("APISERVER") 
+	viper.SetConfigType(file_type)
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix("APISERVER")
 	replacer := strings.NewReplacer(".", "_")
 	viper.SetEnvKeyReplacer(replacer)
 	if err := viper.ReadInConfig(); err != nil {
