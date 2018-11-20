@@ -73,6 +73,10 @@ func GetJson(key string) interface{} {
 	return viper.GetStringMap(key)
 }
 
+func GetArray(key string) interface{} {
+	return viper.GetStringSlice(key)
+}
+
 func GetRaw(key string) interface{} {
 	return viper.Get(key)
 }
@@ -88,3 +92,9 @@ func GetBool(key string) bool {
 func GetInt(key string) int {
 	return viper.GetInt(key)
 }
+
+func Set(key string, value interface{}) {
+	viper.Set(key, value)
+}
+
+
