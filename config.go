@@ -9,6 +9,88 @@ import (
 	"github.com/spf13/viper"
 )
 
+// viper for config manager
+type ViperManager struct {
+	Configs map[string]*viper.Viper
+}
+
+func NewViperManager() *ViperManager {
+	return &ViperManager{Configs: make(map[string]*viper.Viper)}
+}
+
+var Manager = NewViperManager()
+
+// Add config
+func (vm *ViperManager) Add(name string, cfg string) error {
+	v := viper.New()
+
+	err := vm.Init(cfg, v)
+
+	if err != nil {
+		return err
+	}
+
+	vm.Configs[name] = v
+
+	return nil
+}
+
+// Get config 
+func (vm *ViperManager) Get(name string) *viper.Viper {
+	v, ok := vm.Configs[name]
+
+	if ok {
+		return v
+	}
+
+	return nil
+}
+
+// init config
+func (vm *ViperManager) Init(cfg string, v *viper.Viper) error {
+	var file_type string
+	file_ext := filepath.Ext(cfg)
+	if file_ext == "" {
+		file_type = "yaml"
+	} else {
+		re := strings.NewReplacer(".", "")
+		file_type = re.Replace(file_ext)
+	}
+
+	if  err := vm.initConfig(cfg, file_type, v); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (vm *ViperManager) initConfig(cfg, file_type string, v *viper.Viper) error {
+	if cfg != "" {
+		v.SetConfigFile(cfg)
+	} else {
+		v.AddConfigPath("conf")
+		v.SetConfigName("config")
+	}
+	if file_type == "" {
+		file_type = "yaml"
+	}
+	v.SetConfigType(file_type)
+	v.AutomaticEnv()
+	v.SetEnvPrefix("APISERVER")
+	replacer := strings.NewReplacer(".", "_")
+	v.SetEnvKeyReplacer(replacer)
+	if err := v.ReadInConfig(); err != nil {
+		return err
+	}
+
+	v.WatchConfig()
+	v.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Printf("Config file changed: %s", e.Name)
+	})
+
+	return  nil
+}
+
 type Config struct {
 	Name string
 }
